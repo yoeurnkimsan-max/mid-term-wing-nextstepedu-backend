@@ -3,12 +3,15 @@ package com.NextStepEdu.services.impl;
 import com.NextStepEdu.dto.requests.LoginRequest;
 import com.NextStepEdu.dto.requests.RegisterRequest;
 import com.NextStepEdu.dto.responses.AuthResponse;
+import com.NextStepEdu.dto.responses.UserResponse;
 import com.NextStepEdu.models.RoleModel;
 import com.NextStepEdu.mappers.UserMapper;
 import com.NextStepEdu.models.UserModel;
+import com.NextStepEdu.models.UserProfileModel;
 import com.NextStepEdu.repositories.RoleRepository;
 import com.NextStepEdu.repositories.UserRepository;
 import com.NextStepEdu.services.AuthService;
+import com.NextStepEdu.services.CloudinaryImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,11 +23,13 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,34 +39,55 @@ public class AuthServiceImpl implements AuthService {
         private final RoleRepository roleRepository;
         private final UserMapper userMapper;
         private final PasswordEncoder passwordEncoder;
+    private  final CloudinaryImageService cloudinaryImageService;
 
         private final JwtEncoder accessTokenJwtEncoder;
         private final JwtEncoder refreshTokenEncoder;
 
         private final AuthenticationManager authenticationManager;
 
-        @Override
-        public void register(RegisterRequest registerRequest) {
-                boolean email = userRepository.existsAllByEmail(registerRequest.email());
 
-                if (email) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
-                }
-                UserModel userModel = new UserModel();
-                userModel.setEmail(registerRequest.email());
-                userModel.setPassword(passwordEncoder.encode(registerRequest.password()));
-
-                RoleModel roleModel = roleRepository.findRoleUser();
-                if (roleModel == null) {
-                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                                        "Role 'USER' not found in database. Please ensure roles are initialized.");
-                }
-                userModel.setRoles(List.of(roleModel));
-                userRepository.save(userModel);
-
+    @Override
+    public void register(String email, String password, String firstname, String lastname, String phone, MultipartFile image) {
+        if (userRepository.existsAllByEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
-        @Override
+        // Create User
+        UserModel user = new UserModel();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+
+        RoleModel roleModel = roleRepository.findRoleUser();
+        user.setRoles(List.of(roleModel));
+
+        // Upload image (optional)
+        String imageUrl = null;
+        try {
+            if (image != null && !image.isEmpty()) {
+                Map<String, Object> upload = cloudinaryImageService.upload(image);
+                imageUrl = (String) upload.get("secure_url");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Upload image failed", e);
+        }
+
+        // Create Profile
+        UserProfileModel profile = new UserProfileModel();
+        profile.setFirstname(firstname);
+        profile.setLastname(lastname);
+        profile.setPhone(phone);
+        profile.setImage(imageUrl);
+
+        // Link both sides
+        profile.setUser(user);
+        user.setProfile(profile);
+
+        // Save once
+        userRepository.save(user);
+    }
+
+    @Override
         public AuthResponse login(LoginRequest loginRequest) {
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
@@ -111,4 +137,5 @@ public class AuthServiceImpl implements AuthService {
                                 .refreshToken(refreshToken)
                                 .build();
         }
+
 }

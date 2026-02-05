@@ -18,8 +18,11 @@ public class UserProfileModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Name is required")
-    private String name;
+    @NotBlank(message = "First name is required")
+    private String firstname;
+
+    @NotBlank(message = "Last name is required")
+    private String lastname;
 
     private String image;
 

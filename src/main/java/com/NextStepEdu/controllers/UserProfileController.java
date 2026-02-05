@@ -1,11 +1,11 @@
 package com.NextStepEdu.controllers;
 
-import com.NextStepEdu.dto.requests.RequestUserProfile;
-import com.NextStepEdu.dto.responses.ResponseUserProfile;
+import com.NextStepEdu.dto.responses.UserProfileResponse;
+import com.NextStepEdu.models.UserProfileModel;
 import com.NextStepEdu.services.UserProfileService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,22 +14,29 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/profile")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserProfileController {
+
     private final UserProfileService userProfileService;
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<ResponseUserProfile> create(
-            @RequestPart("name") String name,
-            @RequestPart("phone") String phone,
-            @RequestPart(value = "image", required = false) MultipartFile image
+    @PutMapping(value = "/users/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateProfile(
+            @PathVariable Integer userId,
+            @RequestParam String firstname,
+            @RequestParam String lastname,
+            @RequestParam String phone,
+            @RequestParam(required = false) MultipartFile image
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userProfileService.create(name, phone, image));
+        userProfileService.updateProfile(userId, firstname, lastname, phone, image);
+        return ResponseEntity.ok("Profile updated");
     }
-
-    @GetMapping("/findAll")
-    public List<ResponseUserProfile> findAll() {
-        return userProfileService.findAll();
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<?> deleteProfile(@PathVariable Integer userId) {
+        userProfileService.deleteProfile(userId);
+        return ResponseEntity.ok("Profile deleted");
+    }
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserProfileResponse>> getAllProfiles() {
+        return ResponseEntity.ok(userProfileService.getAllProfiles());
     }
 }

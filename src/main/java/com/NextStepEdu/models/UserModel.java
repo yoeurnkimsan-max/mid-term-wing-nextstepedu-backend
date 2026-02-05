@@ -51,4 +51,7 @@ public class UserModel  {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProfileModel profile;
 
+
+
+
 }

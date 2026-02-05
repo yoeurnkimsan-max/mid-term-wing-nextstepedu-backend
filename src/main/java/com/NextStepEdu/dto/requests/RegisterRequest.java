@@ -15,6 +15,12 @@ public record RegisterRequest(
                         "At least one English lowercase English Letter" +
                         "AT least one digit" +
                         "At least one special character") // Regular Expression
-        String password
+        String password,
+        @NotBlank(message = "firstname is required")
+        String firstname,
+        @NotBlank(message = "lastname is required")
+        String lastname,
+        @NotBlank(message = "Phone is required")
+        String phone
 ) {
 }
