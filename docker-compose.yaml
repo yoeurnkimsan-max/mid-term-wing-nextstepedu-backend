@@ -28,4 +28,3 @@ services:
       - .env
     environment:
       SPRING_PROFILES_ACTIVE: dev
-
