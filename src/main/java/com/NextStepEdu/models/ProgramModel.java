@@ -1,6 +1,9 @@
 package com.NextStepEdu.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -47,5 +50,6 @@ public class ProgramModel {
 
     // Program has many Scholarships
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ScholarshipModel> scholarships;
 }

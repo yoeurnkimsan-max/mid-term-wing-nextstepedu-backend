@@ -1,5 +1,6 @@
 package com.NextStepEdu.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -64,5 +65,6 @@ public class ScholarshipModel {
     private UniversityModel university;
 
     @OneToMany(mappedBy = "scholarship", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ScholarshipContactModel> contacts;
 }

@@ -1,5 +1,6 @@
 package com.NextStepEdu.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,6 @@ public class UniversityContactModel {
 
     @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)
+    @JsonBackReference
     private UniversityModel university;
 }

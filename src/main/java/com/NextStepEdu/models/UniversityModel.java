@@ -1,5 +1,7 @@
 package com.NextStepEdu.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -47,14 +49,18 @@ public class UniversityModel {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<FacultyModel> faculties;
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ProgramModel> programs;
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<UniversityContactModel> contacts;
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ScholarshipModel> scholarships;
 }
