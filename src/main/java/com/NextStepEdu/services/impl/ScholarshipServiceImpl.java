@@ -1,5 +1,6 @@
 package com.NextStepEdu.services.impl;
 
+import com.NextStepEdu.dto.responses.error_response.ResourceNotFoundException;
 import com.NextStepEdu.models.ProgramModel;
 import com.NextStepEdu.models.ScholarshipModel;
 import com.NextStepEdu.models.UniversityModel;
@@ -9,8 +10,12 @@ import com.NextStepEdu.repositories.UniversityRepository;
 import com.NextStepEdu.services.CloudinaryImageService;
 import com.NextStepEdu.services.ScholarshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -32,6 +37,11 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     }
 
     @Override
+    public Page<ScholarshipModel> findAll(Pageable pageable) {
+        return scholarshipRepository.findAll(pageable);
+    }
+
+    @Override
     public ScholarshipModel findById(Integer id) {
         return scholarshipRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Scholarship not found: " + id));
@@ -44,6 +54,7 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     }
 
     @Override
+    @Transactional
     public ScholarshipModel create(
             String name,
             String description,
@@ -96,6 +107,7 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     }
 
     @Override
+    @Transactional
     public ScholarshipModel update(
             Integer id,
             String name,
@@ -156,9 +168,10 @@ public class ScholarshipServiceImpl implements ScholarshipService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         ScholarshipModel scholarship = scholarshipRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Scholarship not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Scholarship not found: " + id));
         scholarshipRepository.delete(scholarship);
     }
 

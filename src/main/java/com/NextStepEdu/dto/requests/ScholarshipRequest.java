@@ -2,41 +2,35 @@ package com.NextStepEdu.dto.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
-public record ScholarshipRequest(
+@Data
+public class ScholarshipRequest {
+    @NotBlank(message = "Name is required")
+    private String name;
 
-        @NotBlank(message = "Scholarship name is required")
-        String name,
+    @NotBlank(message = "Description is required")
+    private String description;
 
-        String slug,
+    @NotNull(message = "Level is required")
+    private Integer level;
 
-        String logoUrl,
+    private String benefits;           // Optional
+    private String requirements;       // Optional
+    private String howToApply;         // Optional
+    private String applyLink;          // Optional
+    private String status;
 
-        String coverImageUrl,
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime deadline;    // Optional
 
-        String description,
+    private Integer programId;         // Optional
+    private Integer universityId;      // Optional
 
-        Integer level,
-
-        String benefits,
-
-        String requirements,
-
-        String howToApply,
-
-        String applyLink,
-
-        String status,
-
-        LocalDateTime deadline,
-
-        @NotNull(message = "Program ID is required")
-        Integer programId,
-
-        @NotNull(message = "University ID is required")
-        Integer universityId
-
-) {
+    private MultipartFile logo;        // Optional
+    private MultipartFile coverImage;  // Optional
 }

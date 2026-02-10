@@ -174,10 +174,6 @@ public class DataInit {
             System.out.println("ℹ️ Scholarships already exist in database");
         }
 
-        ScholarshipModel harvardScholarship =
-                scholarshipRepository.findBySlug("harvard-excellence").orElseThrow();
-
-
         // ===============================
         // 5) UNIVERSITY CONTACTS
         // ===============================
@@ -208,16 +204,17 @@ public class DataInit {
         // 6) SCHOLARSHIP CONTACTS
         // ===============================
         if (scholarshipContactRepository.count() == 0) {
+            scholarshipRepository.findBySlug("harvard-excellence").ifPresent(harvardScholarship -> {
+                ScholarshipContactModel sc1 = new ScholarshipContactModel();
+                sc1.setLabel("Scholarship Support Office");
+                sc1.setEmail("scholarships@harvard.edu");
+                sc1.setPhone("+1-999-888-7777");
+                sc1.setWebsiteUrl("https://www.harvard.edu/scholarships");
+                sc1.setScholarship(harvardScholarship);
 
-            ScholarshipContactModel sc1 = new ScholarshipContactModel();
-            sc1.setLabel("Scholarship Support Office");
-            sc1.setEmail("scholarships@harvard.edu");
-            sc1.setPhone("+1-999-888-7777");
-            sc1.setWebsiteUrl("https://www.harvard.edu/scholarships");
-            sc1.setScholarship(harvardScholarship);
-
-            scholarshipContactRepository.save(sc1);
-            System.out.println("✅ Scholarship Contacts initialized");
+                scholarshipContactRepository.save(sc1);
+                System.out.println("✅ Scholarship Contacts initialized");
+            });
         } else {
             System.out.println("ℹ️ Scholarship Contacts already exist in database");
         }
