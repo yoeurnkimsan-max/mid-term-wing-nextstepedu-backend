@@ -15,8 +15,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,8 +23,8 @@ import java.util.UUID;
 public class UniversityModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @NotBlank(message = "University name is required")
     private String name;

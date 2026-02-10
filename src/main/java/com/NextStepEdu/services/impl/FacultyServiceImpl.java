@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -46,7 +45,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional(readOnly = true)
-    public FacultyResponse getById(UUID id) {
+    public FacultyResponse getById(Integer id) {
         FacultyModel faculty = facultyRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
 
@@ -55,7 +54,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<FacultyResponse> getAll(UUID universityId) {
+    public List<FacultyResponse> getAll(Integer universityId) {
         if (universityId != null) {
             return facultyRepository.findByUniversity_Id(universityId)
                     .stream()
@@ -71,7 +70,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional
-    public FacultyResponse update(UUID id, FacultyRequest request) {
+    public FacultyResponse update(Integer id, FacultyRequest request) {
         FacultyModel faculty = facultyRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
 
@@ -80,7 +79,7 @@ public class FacultyServiceImpl implements FacultyService {
         UniversityModel university = null;
         if (request.universityId() != null) {
             university = getUniversityOrThrow(request.universityId());
-            UUID currentUniversityId = faculty.getUniversity() == null ? null : faculty.getUniversity().getId();
+            Integer currentUniversityId = faculty.getUniversity() == null ? null : faculty.getUniversity().getId();
             if (currentUniversityId == null
                     || !currentUniversityId.equals(university.getId())
                     || !faculty.getName().equalsIgnoreCase(normalizedName)) {
@@ -99,19 +98,19 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         FacultyModel faculty = facultyRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Faculty not found"));
         facultyRepository.delete(faculty);
     }
 
-    private UniversityModel getUniversityOrThrow(UUID universityId) {
+    private UniversityModel getUniversityOrThrow(Integer universityId) {
         return universityRepository.findById(universityId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "University not found"));
     }
 
     private FacultyResponse toResponse(FacultyModel faculty) {
-        UUID universityId = faculty.getUniversity() == null ? null : faculty.getUniversity().getId();
+        Integer universityId = faculty.getUniversity() == null ? null : faculty.getUniversity().getId();
         String universityName = faculty.getUniversity() == null ? null : faculty.getUniversity().getName();
         return new FacultyResponse(
                 faculty.getId(),

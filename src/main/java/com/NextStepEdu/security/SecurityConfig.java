@@ -73,6 +73,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(endpoint -> endpoint
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/faculties/**").hasAnyAuthority("SCOPE_USER", "SCOPE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/v1/faculties/**").hasAuthority("SCOPE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/faculties/**").hasAuthority("SCOPE_ADMIN")
