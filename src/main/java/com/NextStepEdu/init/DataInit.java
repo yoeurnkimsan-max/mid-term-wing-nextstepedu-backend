@@ -1,3 +1,4 @@
+
  package com.NextStepEdu.init;
 
  import com.NextStepEdu.models.*;
@@ -225,3 +226,4 @@
          System.out.println("🎉 All demo data initialized successfully!");
      }
  }
+

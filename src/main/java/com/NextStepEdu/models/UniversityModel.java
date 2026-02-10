@@ -7,6 +7,21 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +30,9 @@ import java.util.List;
 public class UniversityModel {
 
     @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer id;
 
     @NotBlank(message = "University name is required")
@@ -49,6 +66,7 @@ public class UniversityModel {
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<FacultyModel> faculties;
 
+
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<ProgramModel> programs;
 
@@ -57,4 +75,5 @@ public class UniversityModel {
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private List<ScholarshipModel> scholarships;
+
 }

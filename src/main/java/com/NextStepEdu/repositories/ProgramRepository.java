@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ProgramRepository extends JpaRepository<ProgramModel, Integer> {
 
     Optional<ProgramModel> findByName(String name);
+
 }

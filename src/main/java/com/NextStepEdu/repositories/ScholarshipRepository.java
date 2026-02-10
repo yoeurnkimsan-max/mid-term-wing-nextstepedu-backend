@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ScholarshipRepository  extends JpaRepository<ScholarshipModel, Integer> {
     Optional<ScholarshipModel> findBySlug(String slug);
+
 }

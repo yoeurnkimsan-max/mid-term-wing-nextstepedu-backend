@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:9998/db_nextstepedu
+    username: nextstepedu
+    password: nextstepedu123
+
+cloudinary:
+  cloud-name: dkloakzs6
+  api-key: 162361396439147
+  api-secret: DVu7SNnY50pVCr7xxY1mRmsO4Os

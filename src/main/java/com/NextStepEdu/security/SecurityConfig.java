@@ -52,8 +52,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(endpoint -> endpoint
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
+
                 .requestMatchers("/api/v1/universities/**").permitAll()
                 .requestMatchers("/api/v1/university-contacts/**").permitAll()
+
+                .requestMatchers("/api/v1/faculties/**").permitAll()
+
                 .requestMatchers("/api/v1/profile/**").authenticated()
                 .anyRequest().authenticated());
 
