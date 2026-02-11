@@ -54,6 +54,15 @@ public class AuthController {
         authService.register(email, password, firstname, lastname, phone, image);
         return ResponseEntity.ok("Registered successfully");
     }
+    @PostMapping("/login")
+    AuthResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
+    }
+    @PostMapping("/refresh-token")
+    AuthResponse refreshToekn(@Valid @RequestBody LoginRequest loginRequest) {
+        return  authService.login(loginRequest);
+
+    }
 
 
 
