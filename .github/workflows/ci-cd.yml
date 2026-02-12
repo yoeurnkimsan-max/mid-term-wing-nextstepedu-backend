@@ -23,10 +23,11 @@ jobs:
 
       - name: Build & Push Docker image to GHCR
         run: |
-          ./mvnw jib:build \
+          ./mvnw clean compile jib:build \
             -Dimage=ghcr.io/${{ secrets.GHCR_USERNAME }}/next-step-edu-backend:latest \
             -Djib.to.auth.username=${{ secrets.GHCR_USERNAME }} \
             -Djib.to.auth.password=${{ secrets.GHCR_TOKEN }}
+
 
   deploy:
     runs-on: ubuntu-latest
