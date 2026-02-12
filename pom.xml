@@ -161,10 +161,10 @@
                 <version>3.3.2</version>
                 <configuration>
                     <from>
-                        <image>eclipse-temurin:17-jre</image> <!-- base image -->
+                        <image>eclipse-temurin:21-jre</image>
                     </from>
                     <to>
-                        <image>ghcr.io/${env.GITHUB_REPOSITORY}/next-step-edu-backend:latest</image>
+                        <image>ghcr.io/${env.GHCR_USERNAME}/next-step-edu-backend:latest</image>
                         <auth>
                             <username>${env.GHCR_USERNAME}</username>
                             <password>${env.GHCR_TOKEN}</password>
