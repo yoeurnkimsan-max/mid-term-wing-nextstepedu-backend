@@ -83,7 +83,8 @@ public class UserProfileServiceImpl implements UserProfileService {
                         p.getFirstname(),
                         p.getLastname(),
                         p.getPhone(),
-                        p.getImage()
+                        p.getImage(),
+                        p.getUser().getCreatedAt()
                 ))
                 .toList();
     }

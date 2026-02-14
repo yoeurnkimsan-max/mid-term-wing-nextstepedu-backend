@@ -1,5 +1,7 @@
 package com.NextStepEdu.dto.responses;
 
+import java.time.LocalDateTime;
+
 public record UserProfileResponse(
         Integer id,
         Integer userId,
@@ -7,6 +9,7 @@ public record UserProfileResponse(
         String firstname,
         String lastname,
         String phone,
-        String image
+        String image,
+         LocalDateTime createdAt
 ) {
 }
