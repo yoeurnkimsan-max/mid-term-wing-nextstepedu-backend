@@ -20,6 +20,7 @@ public class CloudinaryImageUploadController {
 
     private CloudinaryImageService  cloudinaryImageService;
 
+
     @PostMapping
     public ResponseEntity<Map> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
          Map data =   this.cloudinaryImageService.upload(file);
