@@ -64,10 +64,31 @@ public class SecurityConfig {
         http.authorizeHttpRequests(endpoint -> endpoint
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
-                .requestMatchers("/api/v1/universities/**").permitAll()
-                .requestMatchers("/api/v1/university-contacts/**").permitAll()
-                .requestMatchers("/api/v1/faculties/**").permitAll()
-                .requestMatchers("/api/v1/programs/**").permitAll()
+                .requestMatchers( "/api/v1/applicants").permitAll()
+//                .requestMatchers(HttpMethod.POST, "/api/v1/applicants").hasAnyRole("ADMIN")
+//                .requestMatchers(HttpMethod.PUT, "/api/v1/applicants").hasAnyRole("ADMIN")
+//                .requestMatchers(HttpMethod.DELETE, "/api/v1/applicants").hasAnyRole("ADMIN")
+
+                .requestMatchers(HttpMethod.GET, "/api/v1/universities/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/universities/**").hasAnyRole("ADMIN")
+
+                .requestMatchers(HttpMethod.GET, "/api/v1/university-contacts/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT , "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
+
+                .requestMatchers(HttpMethod.GET , "/api/v1/faculties/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/faculties/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/faculties/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/faculties/**").hasAnyRole("ADMIN")
+
+                .requestMatchers(HttpMethod.GET, "/api/v1/programs/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/programs/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/programs/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/programs/**").hasAnyRole("ADMIN")
+
                 .requestMatchers("/api/v1/scholarship-contacts/**").permitAll()
                 .requestMatchers("/api/v1/scholarships/**").permitAll()
                 .requestMatchers("/api/v1/profile/**").authenticated()

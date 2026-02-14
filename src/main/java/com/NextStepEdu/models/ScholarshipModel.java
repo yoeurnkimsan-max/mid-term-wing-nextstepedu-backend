@@ -65,6 +65,10 @@ public class ScholarshipModel {
     private UniversityModel university;
 
     @OneToMany(mappedBy = "scholarship", cascade = CascadeType.ALL)
+    private List<ApplicantModel> applicants;
+
+
+    @OneToMany(mappedBy = "scholarship", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ScholarshipContactModel> contacts;
 }

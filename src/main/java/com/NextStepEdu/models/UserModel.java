@@ -48,6 +48,10 @@ public class UserModel  {
     )
     private List<RoleModel> roles;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ApplicantModel> applicants;
+
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProfileModel profile;
 

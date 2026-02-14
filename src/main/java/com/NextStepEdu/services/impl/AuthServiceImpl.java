@@ -94,11 +94,13 @@ public class AuthServiceImpl implements AuthService {
                                                 loginRequest.email(),
                                                 loginRequest.password()));
 
-                String scope = authentication.getAuthorities()
-                                .stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .filter(role -> role.startsWith("ROLE_")) // ✅ Only include your custom roles
-                                .collect(Collectors.joining(" "));
+        String scope = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(role -> role.startsWith("ROLE_"))
+                // Add this line to strip the prefix:
+                .map(role -> role.replace("ROLE_", ""))
+                .collect(Collectors.joining(" "));
 
                 Instant now = Instant.now();
 
