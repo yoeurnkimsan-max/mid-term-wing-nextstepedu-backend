@@ -98,8 +98,8 @@ public class SecurityConfig {
 
 
 
-                .requestMatchers("/api/v1/profile/**").hasRole("ADMIN")
-                .anyRequest().hasRole("ADMIN"));
+                .requestMatchers("/api/v1/profile/**").permitAll()
+                        .anyRequest().authenticated());
 
         http.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwtConfigurer -> jwtConfigurer

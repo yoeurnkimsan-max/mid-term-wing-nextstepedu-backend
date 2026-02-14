@@ -35,7 +35,7 @@ public class UserProfileController {
         userProfileService.deleteProfile(userId);
         return ResponseEntity.ok("Profile deleted");
     }
-    @GetMapping("/getAll")
+    @GetMapping()
     public ResponseEntity<List<UserProfileResponse>> getAllProfiles() {
         return ResponseEntity.ok(userProfileService.getAllProfiles());
     }
