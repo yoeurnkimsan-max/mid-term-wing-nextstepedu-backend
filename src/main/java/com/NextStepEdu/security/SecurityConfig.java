@@ -97,7 +97,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/scholarship/**").hasRole("ADMIN")
 
 
-
                 .requestMatchers("/api/v1/profile/**").permitAll()
                         .anyRequest().authenticated());
 
