@@ -1,6 +1,7 @@
 package com.NextStepEdu.services.impl;
 
 import com.NextStepEdu.dto.requests.LoginRequest;
+import com.NextStepEdu.dto.requests.RefreshTokenRequest;
 import com.NextStepEdu.dto.responses.AuthResponse;
 import com.NextStepEdu.mappers.UserMapper;
 import com.NextStepEdu.models.RoleModel;
@@ -17,13 +18,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -43,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtEncoder refreshTokenEncoder;
 
     private final AuthenticationManager authenticationManager;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
 
     @Override
@@ -138,5 +144,71 @@ public class AuthServiceImpl implements AuthService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    @Override
+    public AuthResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+
+        String refreshToken = refreshTokenRequest.refreshToken();
+        //Authentication client with refresh Token
+        Authentication auth = new BearerTokenAuthenticationToken(refreshToken);
+        auth =  jwtAuthenticationProvider.authenticate(auth);
+
+
+        //ROLE_USER ROLE_ADMIN
+//        String scope = auth
+//                .getAuthorities()
+//                .stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(" "));
+        Jwt jwt =(Jwt) auth.getPrincipal();
+
+        //Generate JWT Token by Encoder
+        //1 . Define ClaimSets(Payload)
+        Instant now = Instant.now();
+        JwtClaimsSet jwtAccessClaimsSet = JwtClaimsSet.builder()
+                .id(jwt.getId())
+                .subject("Access APIs")
+                .issuer(jwt.getId())
+                .issuedAt(now)
+                .expiresAt(now.plus(10, ChronoUnit.SECONDS))
+                .audience(jwt.getAudience())
+                .claim("isAdmin",true)
+                .claim("studentId", "RUPP00")
+                .claim("scope",jwt.getClaimAsString("scope"))
+                .build();
+
+        //Generate token
+        String accessToken = accessTokenJwtEncoder
+                .encode(JwtEncoderParameters.from(jwtAccessClaimsSet))
+                .getTokenValue();
+
+        //Get expiration of refresh token
+
+        Instant expiresAt = jwt.getExpiresAt();
+        long remainingDays = Duration.between(now, expiresAt).toDays();
+        if (remainingDays < 1) {
+            //Generate JWT Refresh Token Encoder
+            JwtClaimsSet jwtRefreshClaimsSet = JwtClaimsSet.builder()
+                    .id(auth.getName())
+                    .subject("Refresh Token")
+                    .issuer(auth.getName())
+                    .issuedAt(now)
+                    .expiresAt(now.plus(7, ChronoUnit.DAYS))
+                    .audience(List.of("NextJs","Android","IOS"))
+                    .claim("scope",jwt.getClaimAsString("scope"))
+                    .build();
+
+            refreshToken = refreshTokenEncoder
+                    .encode(JwtEncoderParameters.from(jwtRefreshClaimsSet))
+                    .getTokenValue();
+        }
+
+        return  AuthResponse.builder()
+                .tokenType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.NextStepEdu.controllers;
 
 import com.NextStepEdu.dto.requests.LoginRequest;
+import com.NextStepEdu.dto.requests.RefreshTokenRequest;
 import com.NextStepEdu.dto.responses.AuthResponse;
 import com.NextStepEdu.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,9 +60,9 @@ public class AuthController {
         return authService.login(loginRequest);
     }
     @PostMapping("/refresh-token")
-    AuthResponse refreshToekn(@Valid @RequestBody LoginRequest loginRequest) {
+    AuthResponse refreshToekn(@Valid @RequestBody RefreshTokenRequest request) {
 
-        return  authService.login(loginRequest);
+        return  authService.refreshToken(request);
 
     }
 
