@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
                 .requestMatchers( "/api/v1/applicants").permitAll()
+
 //                .requestMatchers(HttpMethod.POST, "/api/v1/applicants").hasAnyRole("ADMIN")
 //                .requestMatchers(HttpMethod.PUT, "/api/v1/applicants").hasAnyRole("ADMIN")
 //                .requestMatchers(HttpMethod.DELETE, "/api/v1/applicants").hasAnyRole("ADMIN")
