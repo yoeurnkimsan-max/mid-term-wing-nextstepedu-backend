@@ -17,7 +17,6 @@ import java.util.Map;
 @RequestMapping("/api/v1/cloud/upload")
 public class CloudinaryImageUploadController {
     @Autowired
-
     private CloudinaryImageService  cloudinaryImageService;
 
 
