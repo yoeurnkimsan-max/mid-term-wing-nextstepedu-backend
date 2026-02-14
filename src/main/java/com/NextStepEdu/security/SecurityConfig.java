@@ -46,16 +46,6 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
-//            }
-//        };
-//    }
-
     @Bean
     SecurityFilterChain configureApiSecurity(HttpSecurity http,
             @Qualifier("accessTokenjwtDecoder") JwtDecoder jwtDecoder) throws Exception {
@@ -64,14 +54,25 @@ public class SecurityConfig {
         http.authorizeHttpRequests(endpoint -> endpoint
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
-                .requestMatchers("/api/v1/universities/**").permitAll()
-                .requestMatchers("/api/v1/university-contacts/**").permitAll()
-                .requestMatchers("/api/v1/faculties/**").permitAll()
-                .requestMatchers("/api/v1/programs/**").permitAll()
-                .requestMatchers("/api/v1/scholarship-contacts/**").permitAll()
-                .requestMatchers("/api/v1/scholarships/**").permitAll()
-                .requestMatchers("/api/v1/profile/**").authenticated()
-                .anyRequest().authenticated());
+                .requestMatchers(HttpMethod.GET,"/api/v1/universities/**","/api/v1/university-contacts").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/university-contacts/**","/api/v1/university-contacts").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/faculties/**","/api/v1/faculties").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/programs/**","/api/v1/programs").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/scholarship-contact/**","/api/v1/scholarship-contact").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/scholarship-contact/**","/api/v1/scholarship-contact").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/scholarship/**", "/api/v1/scholarship").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/scholarship/**", "/api/v1/scholarship/**").permitAll()
+
+//                .requestMatchers(HttpMethod.POST,"/api/v1/universities/**","/api/v1/university-contacts").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/university-contacts/**","/api/v1/university-contacts").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/faculties/**","/api/v1/faculties").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/programs/**","/api/v1/programs").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/scholarship-contact/**","/api/v1/scholarship-contact").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/scholarship-contact/**","/api/v1/scholarship-contact").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/scholarship/**", "/api/v1/scholarship").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/api/v1/scholarship/**", "/api/v1/scholarship/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/profile/**").hasRole("ADMIN")
+                .anyRequest().hasRole("ADMIN"));
 
         http.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)));

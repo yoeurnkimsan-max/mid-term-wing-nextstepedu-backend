@@ -1,11 +1,9 @@
 package com.NextStepEdu.services.impl;
 
 import com.NextStepEdu.dto.requests.LoginRequest;
-import com.NextStepEdu.dto.requests.RegisterRequest;
 import com.NextStepEdu.dto.responses.AuthResponse;
-import com.NextStepEdu.dto.responses.UserResponse;
-import com.NextStepEdu.models.RoleModel;
 import com.NextStepEdu.mappers.UserMapper;
+import com.NextStepEdu.models.RoleModel;
 import com.NextStepEdu.models.UserModel;
 import com.NextStepEdu.models.UserProfileModel;
 import com.NextStepEdu.repositories.RoleRepository;
@@ -35,16 +33,16 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
-        private final UserRepository userRepository;
-        private final RoleRepository roleRepository;
-        private final UserMapper userMapper;
-        private final PasswordEncoder passwordEncoder;
-    private  final CloudinaryImageService cloudinaryImageService;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final CloudinaryImageService cloudinaryImageService;
 
-        private final JwtEncoder accessTokenJwtEncoder;
-        private final JwtEncoder refreshTokenEncoder;
+    private final JwtEncoder accessTokenJwtEncoder;
+    private final JwtEncoder refreshTokenEncoder;
 
-        private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
 
     @Override
@@ -88,54 +86,57 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-        public AuthResponse login(LoginRequest loginRequest) {
-                Authentication authentication = authenticationManager.authenticate(
-                                new UsernamePasswordAuthenticationToken(
-                                                loginRequest.email(),
-                                                loginRequest.password()));
+    public AuthResponse login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.email(),
+                        loginRequest.password()));
 
-                String scope = authentication.getAuthorities()
-                                .stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .filter(role -> role.startsWith("ROLE_")) // ✅ Only include your custom roles
-                                .collect(Collectors.joining(" "));
+        String scope = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(role -> role.startsWith("ROLE_"))
+                // Add this line to strip the prefix:
+                .map(role -> role.replace("ROLE_", ""))
+                .collect(Collectors.joining(" "));
 
-                Instant now = Instant.now();
 
-                // Access Token
-                JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-                                .id(authentication.getName())
-                                .subject(authentication.getName())
-                                .issuer("taskflow-api")
-                                .issuedAt(now)
-                                .expiresAt(now.plus(10, ChronoUnit.MINUTES)) // ✅ Adjust expiration
-                                .audience(List.of("NextJs", "Android", "IOS"))
-                                .claim("role", scope)
-                                .claim("scope", scope)
-                                .build();
+        Instant now = Instant.now();
 
-                // Refresh Token
-                JwtClaimsSet jwtRefreshClaimsSet = JwtClaimsSet.builder()
-                                .id(authentication.getName())
-                                .subject(authentication.getName())
-                                .issuer("taskflow-api")
-                                .issuedAt(now)
-                                .expiresAt(now.plus(7, ChronoUnit.DAYS))
-                                .audience(List.of("NextJs", "Android", "IOS"))
-                                .claim("role", scope)
-                                .claim("scope", scope)
-                                .build();
+        // Access Token
+        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+                .id(authentication.getName())
+                .subject(authentication.getName())
+                .issuer("taskflow-api")
+                .issuedAt(now)
+                .expiresAt(now.plus(10, ChronoUnit.MINUTES)) // ✅ Adjust expiration
+                .audience(List.of("NextJs", "Android", "IOS"))
+                .claim("role", scope)
+                .claim("scope", scope)
+                .build();
 
-                String accessToken = accessTokenJwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet))
-                                .getTokenValue();
-                String refreshToken = refreshTokenEncoder.encode(JwtEncoderParameters.from(jwtRefreshClaimsSet))
-                                .getTokenValue();
+        // Refresh Token
+        JwtClaimsSet jwtRefreshClaimsSet = JwtClaimsSet.builder()
+                .id(authentication.getName())
+                .subject(authentication.getName())
+                .issuer("taskflow-api")
+                .issuedAt(now)
+                .expiresAt(now.plus(7, ChronoUnit.DAYS))
+                .audience(List.of("NextJs", "Android", "IOS"))
+                .claim("role", scope)
+                .claim("scope", scope)
+                .build();
 
-                return AuthResponse.builder()
-                                .tokenType("Bearer")
-                                .accessToken(accessToken)
-                                .refreshToken(refreshToken)
-                                .build();
-        }
+        String accessToken = accessTokenJwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet))
+                .getTokenValue();
+        String refreshToken = refreshTokenEncoder.encode(JwtEncoderParameters.from(jwtRefreshClaimsSet))
+                .getTokenValue();
+
+        return AuthResponse.builder()
+                .tokenType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 
 }
