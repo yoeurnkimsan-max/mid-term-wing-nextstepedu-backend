@@ -73,7 +73,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public  List<UserProfileResponse> getAllProfiles() {
+    public List<UserProfileResponse> getAllProfiles() {
         return userProfileRepository.findAllWithUser()
                 .stream()
                 .map(p -> new UserProfileResponse(
@@ -84,8 +84,23 @@ public class UserProfileServiceImpl implements UserProfileService {
                         p.getLastname(),
                         p.getPhone(),
                         p.getImage(),
-                        p.getUser().getCreatedAt()
-                ))
+                        p.getUser().getCreatedAt()))
                 .toList();
+    }
+
+    @Override
+    public UserProfileResponse getProfileByUserId(Integer userId) {
+        UserProfileModel profile = userProfileRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found for user"));
+
+        return new UserProfileResponse(
+                profile.getId(),
+                profile.getUser().getId(),
+                profile.getUser().getEmail(),
+                profile.getFirstname(),
+                profile.getLastname(),
+                profile.getPhone(),
+                profile.getImage(),
+                profile.getUser().getCreatedAt());
     }
 }
