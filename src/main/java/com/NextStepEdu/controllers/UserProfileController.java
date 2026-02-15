@@ -25,24 +25,18 @@ public class UserProfileController {
             @RequestParam String firstname,
             @RequestParam String lastname,
             @RequestParam String phone,
-            @RequestParam(required = false) MultipartFile image) {
+            @RequestParam(required = false) MultipartFile image
+    ) {
         userProfileService.updateProfile(userId, firstname, lastname, phone, image);
         return ResponseEntity.ok("Profile updated");
     }
-
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<?> deleteProfile(@PathVariable Integer userId) {
         userProfileService.deleteProfile(userId);
         return ResponseEntity.ok("Profile deleted");
     }
-
     @GetMapping()
     public ResponseEntity<List<UserProfileResponse>> getAllProfiles() {
         return ResponseEntity.ok(userProfileService.getAllProfiles());
-    }
-
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<UserProfileResponse> getProfileByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(userProfileService.getProfileByUserId(userId));
     }
 }

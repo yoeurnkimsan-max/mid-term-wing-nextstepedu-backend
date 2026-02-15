@@ -10,5 +10,4 @@ public interface UserProfileService {
     void updateProfile(Integer userId, String firstname, String lastname, String phone, MultipartFile image);
     void deleteProfile(Integer userId);
     List<UserProfileResponse> getAllProfiles();
-    UserProfileResponse getProfileByUserId(Integer userId);
 }

@@ -17,8 +17,8 @@ import java.util.Map;
 @RequestMapping("/api/v1/cloud/upload")
 public class CloudinaryImageUploadController {
     @Autowired
-    private CloudinaryImageService  cloudinaryImageService;
 
+    private CloudinaryImageService  cloudinaryImageService;
 
     @PostMapping
     public ResponseEntity<Map> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
