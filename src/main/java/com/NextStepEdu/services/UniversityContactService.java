@@ -17,7 +17,4 @@ public interface UniversityContactService {
     UniversityContactResponse updateContact(Integer id, UniversityContactRequest request);
 
     void deleteContact(Integer id);
-
-    interface ProgramService {
-    }
 }

@@ -35,16 +35,24 @@ public class UniversityServiceImpl implements UniversityService {
         university.setCreatedAt(LocalDateTime.now());
         university.setUpdatedAt(LocalDateTime.now());
 
-        // Upload logo image
-        String logoUrl = uploadImage(logo);
-        if (logoUrl != null) {
-            university.setLogoUrl(logoUrl);
+        if (logo != null && !logo.isEmpty()) {
+            try {
+                Map<String, Object> upload = cloudinaryImageService.upload(logo);
+                String imageUrl = (String) upload.get("secure_url");
+                university.setLogoUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Upload image failed", e);
+            }
         }
 
-        // Upload cover image
-        String coverImageUrl = uploadImage(coverImage);
-        if (coverImageUrl != null) {
-            university.setCoverImageUrl(coverImageUrl);
+        if (coverImage != null && !coverImage.isEmpty()) {
+            try {
+                Map<String, Object> upload = cloudinaryImageService.upload(coverImage);
+                String imageUrl = (String) upload.get("secure_url");
+                university.setCoverImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Upload image failed", e);
+            }
         }
 
         UniversityModel savedUniversity = universityRepository.save(university);
@@ -92,33 +100,28 @@ public class UniversityServiceImpl implements UniversityService {
         universityMapper.updateModel(request, university);
         university.setUpdatedAt(LocalDateTime.now());
 
-        // Upload logo image if provided
-        String logoUrl = uploadImage(logo);
-        if (logoUrl != null) {
-            university.setLogoUrl(logoUrl);
+        if (logo != null && !logo.isEmpty()) {
+            try {
+                Map<String, Object> upload = cloudinaryImageService.upload(logo);
+                String imageUrl = (String) upload.get("secure_url");
+                university.setLogoUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Upload image failed", e);
+            }
         }
 
-        // Upload cover image if provided
-        String coverImageUrl = uploadImage(coverImage);
-        if (coverImageUrl != null) {
-            university.setCoverImageUrl(coverImageUrl);
+        if (coverImage != null && !coverImage.isEmpty()) {
+            try {
+                Map<String, Object> upload = cloudinaryImageService.upload(coverImage);
+                String imageUrl = (String) upload.get("secure_url");
+                university.setCoverImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Upload image failed", e);
+            }
         }
 
         UniversityModel updatedUniversity = universityRepository.save(university);
         return universityMapper.toResponse(updatedUniversity);
-    }
-
-    private String uploadImage(MultipartFile image) {
-        String imageUrl = null;
-        try {
-            if (image != null && !image.isEmpty()) {
-                Map<String, Object> upload = cloudinaryImageService.upload(image);
-                imageUrl = (String) upload.get("secure_url");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Upload image failed", e);
-        }
-        return imageUrl;
     }
 
     @Override
