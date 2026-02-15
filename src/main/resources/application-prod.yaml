@@ -16,6 +16,18 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
       enabled: true
+      location: ${java.io.tmpdir}
+
+  tomcat:
+    max-http-form-post-size: 20MB
+    max-connections: 200
+    threads:
+      max: 200
+
+logging:
+  level:
+    org.springframework.web.multipart: DEBUG
+    org.apache.commons.fileupload: DEBUG
 
 
 cloudinary:
