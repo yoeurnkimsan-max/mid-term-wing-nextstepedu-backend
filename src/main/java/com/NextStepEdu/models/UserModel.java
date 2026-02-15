@@ -26,7 +26,8 @@ public class UserModel  {
     @NotBlank(message = "Password is required")
     private String password;
 
-    private boolean status;
+    @Column(nullable = false, length = 20)
+    private String status;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -60,7 +61,7 @@ public class UserModel  {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
-        this.status = true;
+        this.status = "ACTIVE";
     }
 
 

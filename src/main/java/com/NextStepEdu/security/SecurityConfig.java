@@ -64,15 +64,10 @@ public class SecurityConfig {
 
 
 
-                .requestMatchers(HttpMethod.GET, "/api/v1/universities/**", "/api/v1/university-contacts").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/university-contacts/**").hasRole("ADMIN")
-
-                .requestMatchers(HttpMethod.GET, "/api/v1/university-contacts/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/university-contacts/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/university-contacts/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/university-contacts/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/universities/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/universities/**").hasRole("ADMIN")
 
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/faculties/**", "/api/v1/faculties").permitAll()
