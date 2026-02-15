@@ -10,6 +10,7 @@ public record UserProfileResponse(
         String lastname,
         String phone,
         String image,
-         LocalDateTime createdAt
-) {
-}
+        LocalDateTime createdAt,
+        String role
+) {}
+
