@@ -92,7 +92,9 @@ public class UserProfileServiceImpl implements UserProfileService {
                             p.getPhone(),
                             p.getImage(),
                             p.getUser().getCreatedAt(),
-                            role
+                            role,
+                            p.getUser().getStatus()
+
                     );
                 })
                 .toList();

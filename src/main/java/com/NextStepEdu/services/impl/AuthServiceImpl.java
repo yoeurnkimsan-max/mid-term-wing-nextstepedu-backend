@@ -4,6 +4,7 @@ import com.NextStepEdu.dto.requests.LoginRequest;
 import com.NextStepEdu.dto.requests.RefreshTokenRequest;
 import com.NextStepEdu.dto.responses.AuthResponse;
 import com.NextStepEdu.mappers.UserMapper;
+import com.NextStepEdu.models.AccountStatus;
 import com.NextStepEdu.models.RoleModel;
 import com.NextStepEdu.models.UserModel;
 import com.NextStepEdu.models.UserProfileModel;
@@ -60,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
         // Create User
         UserModel user = new UserModel();
         user.setEmail(email);
+        user.setStatus(AccountStatus.ACTIVE);
         user.setPassword(passwordEncoder.encode(password));
 
         RoleModel roleModel = roleRepository.findRoleUser();
