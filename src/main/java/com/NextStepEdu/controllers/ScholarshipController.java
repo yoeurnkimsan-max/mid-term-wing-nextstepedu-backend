@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +48,12 @@ public class ScholarshipController {
         Pageable pageable = PageRequest.of(page, size, sort);
         
         Page<ScholarshipModel> scholarshipPage = scholarshipService.findAll(pageable);
-        
+
         List<ScholarshipResponse> content = scholarshipPage.getContent()
                 .stream()
                 .map(ScholarshipResponse::fromEntity)
                 .toList();
-        
+
         PageResponse<ScholarshipResponse> response = PageResponse.<ScholarshipResponse>builder()
                 .content(content)
                 .page(scholarshipPage.getNumber())
@@ -99,7 +101,7 @@ public class ScholarshipController {
         ScholarshipRequest request = mapper.readValue(data, ScholarshipRequest.class);
         System.out.println("Parsed as DTO - Name: " + request.getName());
 
-        scholarshipService.create(request.getName(), request.getDescription(), request.getLevel(), request.getBenefits(), request.getRequirements(), request.getHowToApply(), request.getApplyLink(), request.getStatus(), request.getDeadline(), request.getProgramId(), request.getUniversityId(), logo, coverImage);
+        scholarshipService.create(request.getName(), request.getDescription(), request.getLevel(),request.getMaxApplicant(), request.getBenefits(), request.getRequirements(), request.getHowToApply(), request.getApplyLink(), request.getStatus(), request.getDeadline(), request.getProgramId(), request.getUniversityId(), logo, coverImage);
 
         // Option 3: Return structured response
         Map<String, Object> response = new HashMap<>();

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://centerbeam.proxy.rlwy.net:44655/railway
+    url: jdbc:postgresql://nozomi.proxy.rlwy.net:53576/railway
     username: postgres
-    password: GvDdQbfGuGUIkuBYomXAVzXrObZoIAUA
+    password: mvfqlmRhNlfxyluSuiIiEJWlBylcPrwT
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -10,6 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
 
 cloudinary:
   cloud-name: dkloakzs6
