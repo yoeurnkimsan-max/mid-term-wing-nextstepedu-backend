@@ -1,7 +1,10 @@
 package com.NextStepEdu.controllers;
 
+import com.NextStepEdu.dto.requests.UniversityContactRequest;
 import com.NextStepEdu.dto.requests.UniversityRequest;
+import com.NextStepEdu.dto.requests.UniversityWithContactRequest;
 import com.NextStepEdu.dto.responses.UniversityResponse;
+import com.NextStepEdu.services.UniversityContactService;
 import com.NextStepEdu.services.UniversityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,38 +22,67 @@ import java.util.List;
 public class UniversityController {
 
     private final UniversityService universityService;
+    private final UniversityContactService contactService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UniversityResponse> createUniversity(
-            @Valid @ModelAttribute UniversityRequest request,
+    public ResponseEntity<UniversityResponse> createUniversityWithContact(
+            @Valid @ModelAttribute UniversityWithContactRequest request,
             @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
             @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
-        UniversityResponse response = universityService.createUniversity(request, logoUrl, coverImageUrl);
+
+        // Create UniversityRequest from the combined request
+        UniversityRequest universityRequest = UniversityRequest.builder()
+                .name(request.getName())
+                .slug(request.getSlug())
+                .description(request.getDescription())
+                .country(request.getCountry())
+                .city(request.getCity())
+                .officialWebsite(request.getOfficialWebsite())
+                .status(request.getStatus())
+                .build();
+
+        // Create university with images
+        UniversityResponse response = universityService.createUniversity(universityRequest, logoUrl, coverImageUrl);
+
+        // Create contact if fields are provided
+        if (request.getLabel() != null || request.getEmail() != null || request.getPhone() != null) {
+            UniversityContactRequest contactRequest = UniversityContactRequest.builder()
+                    .label(request.getLabel())
+                    .email(request.getEmail())
+                    .phone(request.getPhone())
+                    .websiteUrl(request.getWebsiteUrl())
+                    .universityId(response.getId())
+                    .build();
+
+            contactService.createContact(contactRequest);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UniversityResponse> getUniversityById(@PathVariable Integer id) {
-        UniversityResponse response = universityService.getUniversityById(id);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/slug/{slug}")
-    public ResponseEntity<UniversityResponse> getUniversityBySlug(@PathVariable String slug) {
-        UniversityResponse response = universityService.getUniversityBySlug(slug);
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<UniversityResponse>> getAllUniversities() {
-        List<UniversityResponse> responses = universityService.getAllUniversities();
-        return ResponseEntity.ok(responses);
+        List<UniversityResponse> universities = universityService.getAllUniversities();
+        return ResponseEntity.ok(universities);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UniversityResponse> getUniversityById(@PathVariable Integer id) {
+        UniversityResponse university = universityService.getUniversityById(id);
+        return ResponseEntity.ok(university);
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<UniversityResponse> getUniversityBySlug(@PathVariable String slug) {
+        UniversityResponse university = universityService.getUniversityBySlug(slug);
+        return ResponseEntity.ok(university);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<UniversityResponse>> searchUniversities(@RequestParam String keyword) {
-        List<UniversityResponse> responses = universityService.searchUniversities(keyword);
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<List<UniversityResponse>> searchUniversities(
+            @RequestParam String keyword) {
+        List<UniversityResponse> universities = universityService.searchUniversities(keyword);
+        return ResponseEntity.ok(universities);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -59,6 +91,7 @@ public class UniversityController {
             @Valid @ModelAttribute UniversityRequest request,
             @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
             @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
+
         UniversityResponse response = universityService.updateUniversity(id, request, logoUrl, coverImageUrl);
         return ResponseEntity.ok(response);
     }
