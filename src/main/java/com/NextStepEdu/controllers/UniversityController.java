@@ -26,31 +26,41 @@ public class UniversityController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UniversityResponse> createUniversityWithContact(
-            @ModelAttribute UniversityWithContactRequest request,
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "slug", required = false) String slug,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "officialWebsite", required = false) String officialWebsite,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "label", required = false) String label,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "websiteUrl", required = false) String websiteUrl,
             @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
             @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
 
-        // Create UniversityRequest from the combined request
+        // Create UniversityRequest from the parameters
         UniversityRequest universityRequest = UniversityRequest.builder()
-                .name(request.getName())
-                .slug(request.getSlug())
-                .description(request.getDescription())
-                .country(request.getCountry())
-                .city(request.getCity())
-                .officialWebsite(request.getOfficialWebsite())
-                .status(request.getStatus())
+                .name(name)
+                .slug(slug)
+                .description(description)
+                .country(country)
+                .city(city)
+                .officialWebsite(officialWebsite)
+                .status(status)
                 .build();
 
         // Create university with images
         UniversityResponse response = universityService.createUniversity(universityRequest, logoUrl, coverImageUrl);
 
         // Create contact if fields are provided
-        if (request.getLabel() != null || request.getEmail() != null || request.getPhone() != null) {
+        if (label != null || email != null || phone != null) {
             UniversityContactRequest contactRequest = UniversityContactRequest.builder()
-                    .label(request.getLabel())
-                    .email(request.getEmail())
-                    .phone(request.getPhone())
-                    .websiteUrl(request.getWebsiteUrl())
+                    .label(label)
+                    .email(email)
+                    .phone(phone)
+                    .websiteUrl(websiteUrl)
                     .universityId(response.getId())
                     .build();
 
