@@ -26,7 +26,7 @@ public class UniversityController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UniversityResponse> createUniversityWithContact(
-            @Valid @ModelAttribute UniversityWithContactRequest request,
+            @ModelAttribute UniversityWithContactRequest request,
             @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
             @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
 
@@ -88,9 +88,25 @@ public class UniversityController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UniversityResponse> updateUniversity(
             @PathVariable Integer id,
-            @Valid @ModelAttribute UniversityRequest request,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "slug", required = false) String slug,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "country", required = false) String country,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "officialWebsite", required = false) String officialWebsite,
+            @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
             @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
+
+        UniversityRequest request = UniversityRequest.builder()
+                .name(name)
+                .slug(slug)
+                .description(description)
+                .country(country)
+                .city(city)
+                .officialWebsite(officialWebsite)
+                .status(status)
+                .build();
 
         UniversityResponse response = universityService.updateUniversity(id, request, logoUrl, coverImageUrl);
         return ResponseEntity.ok(response);
