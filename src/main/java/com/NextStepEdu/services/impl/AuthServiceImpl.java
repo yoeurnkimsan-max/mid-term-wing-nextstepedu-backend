@@ -4,6 +4,7 @@ import com.NextStepEdu.dto.requests.LoginRequest;
 import com.NextStepEdu.dto.requests.RefreshTokenRequest;
 import com.NextStepEdu.dto.responses.AuthResponse;
 import com.NextStepEdu.mappers.UserMapper;
+import com.NextStepEdu.models.AccountStatus;
 import com.NextStepEdu.models.RoleModel;
 import com.NextStepEdu.models.UserModel;
 import com.NextStepEdu.models.UserProfileModel;
@@ -60,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
         // Create User
         UserModel user = new UserModel();
         user.setEmail(email);
+        user.setStatus(AccountStatus.ACTIVE);
         user.setPassword(passwordEncoder.encode(password));
 
         RoleModel roleModel = roleRepository.findRoleUser();
@@ -147,67 +149,67 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String incomingRefreshToken = refreshTokenRequest.refreshToken();
 
-        String refreshToken = refreshTokenRequest.refreshToken();
-        //Authentication client with refresh Token
-        Authentication auth = new BearerTokenAuthenticationToken(refreshToken);
-        auth =  jwtAuthenticationProvider.authenticate(auth);
+        Authentication auth = new BearerTokenAuthenticationToken(incomingRefreshToken);
+        auth = jwtAuthenticationProvider.authenticate(auth);
 
-
-        //ROLE_USER ROLE_ADMIN
-//        String scope = auth
-//                .getAuthorities()
-//                .stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(" "));
-        Jwt jwt =(Jwt) auth.getPrincipal();
-
-        //Generate JWT Token by Encoder
-        //1 . Define ClaimSets(Payload)
+        Jwt refreshJwt = (Jwt) auth.getPrincipal();
         Instant now = Instant.now();
-        JwtClaimsSet jwtAccessClaimsSet = JwtClaimsSet.builder()
-                .id(jwt.getId())
-                .subject("Access APIs")
-                .issuer(jwt.getId())
+
+
+        String role = refreshJwt.getClaimAsString("role");
+        String scope = refreshJwt.getClaimAsString("scope");
+
+
+        if (role == null) role = scope;
+        if (scope == null) scope = role;
+
+
+        JwtClaimsSet accessClaims = JwtClaimsSet.builder()
+                .id(refreshJwt.getId())
+                .subject(refreshJwt.getSubject())
+                .issuer("taskflow-api")
                 .issuedAt(now)
-                .expiresAt(now.plus(10, ChronoUnit.SECONDS))
-                .audience(jwt.getAudience())
-                .claim("isAdmin",true)
-                .claim("studentId", "RUPP00")
-                .claim("scope",jwt.getClaimAsString("scope"))
+                .expiresAt(now.plus(10, ChronoUnit.MINUTES))
+                .audience(refreshJwt.getAudience() != null ? refreshJwt.getAudience() : List.of("NextJs"))
+                .claim("role", role)
+                .claim("scope", scope)
                 .build();
 
-        //Generate token
-        String accessToken = accessTokenJwtEncoder
-                .encode(JwtEncoderParameters.from(jwtAccessClaimsSet))
+        String newAccessToken = accessTokenJwtEncoder
+                .encode(JwtEncoderParameters.from(accessClaims))
                 .getTokenValue();
 
-        //Get expiration of refresh token
+        String newRefreshToken = incomingRefreshToken;
+        Instant refreshExpiresAt = refreshJwt.getExpiresAt();
 
-        Instant expiresAt = jwt.getExpiresAt();
-        long remainingDays = Duration.between(now, expiresAt).toDays();
-        if (remainingDays < 1) {
-            //Generate JWT Refresh Token Encoder
-            JwtClaimsSet jwtRefreshClaimsSet = JwtClaimsSet.builder()
-                    .id(auth.getName())
-                    .subject("Refresh Token")
-                    .issuer(auth.getName())
-                    .issuedAt(now)
-                    .expiresAt(now.plus(7, ChronoUnit.DAYS))
-                    .audience(List.of("NextJs","Android","IOS"))
-                    .claim("scope",jwt.getClaimAsString("scope"))
-                    .build();
+        if (refreshExpiresAt != null) {
+            long remainingDays = Duration.between(now, refreshExpiresAt).toDays();
+            if (remainingDays < 1) {
+                JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
+                        .id(refreshJwt.getId())
+                        .subject(refreshJwt.getSubject())
+                        .issuer("taskflow-api")
+                        .issuedAt(now)
+                        .expiresAt(now.plus(7, ChronoUnit.DAYS))
+                        .audience(refreshJwt.getAudience() != null ? refreshJwt.getAudience() : List.of("NextJs"))
+                        .claim("role", role)
+                        .claim("scope", scope)
+                        .build();
 
-            refreshToken = refreshTokenEncoder
-                    .encode(JwtEncoderParameters.from(jwtRefreshClaimsSet))
-                    .getTokenValue();
+                newRefreshToken = refreshTokenEncoder
+                        .encode(JwtEncoderParameters.from(refreshClaims))
+                        .getTokenValue();
+            }
         }
 
-        return  AuthResponse.builder()
+        return AuthResponse.builder()
                 .tokenType("Bearer")
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
                 .build();
+
     }
 
 

@@ -20,12 +20,10 @@ public class ApplicantModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relationship to user (who submitted the application)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
 
-    // Relationship to scholarship being applied for
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scholarship_id", nullable = false)
     private ScholarshipModel scholarship;

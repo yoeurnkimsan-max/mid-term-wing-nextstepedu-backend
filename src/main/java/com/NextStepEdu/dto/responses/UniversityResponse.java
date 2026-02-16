@@ -14,13 +14,15 @@ public class UniversityResponse {
     private Integer id;
     private String name;
     private String slug;
-    private String logoUrl;
-    private String coverImageUrl;
+    private String logo;
+    private String coverImage;
     private String description;
     private String country;
     private String city;
     private String officialWebsite;
     private String status;
+
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<UniversityContactResponse> contacts;

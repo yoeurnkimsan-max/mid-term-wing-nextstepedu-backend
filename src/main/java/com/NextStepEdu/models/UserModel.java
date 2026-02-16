@@ -26,8 +26,12 @@ public class UserModel  {
     @NotBlank(message = "Password is required")
     private String password;
 
-    @Column(nullable = false, length = 20)
-    private String status;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountStatus status;
+
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -61,7 +65,7 @@ public class UserModel  {
         LocalDateTime now = LocalDateTime.now();
         this.createdAt = now;
         this.updatedAt = now;
-        this.status = "ACTIVE";
+
     }
 
 

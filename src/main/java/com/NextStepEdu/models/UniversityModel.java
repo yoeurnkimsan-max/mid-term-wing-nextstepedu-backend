@@ -42,7 +42,6 @@ public class UniversityModel {
     private String officialWebsite;
 
     private String status;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -57,9 +56,14 @@ public class UniversityModel {
     @JsonIgnore
     private List<ProgramModel> programs;
 
+
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     private List<UniversityContactModel> contacts = new ArrayList<>();
+
+
+
+
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     @JsonIgnore
