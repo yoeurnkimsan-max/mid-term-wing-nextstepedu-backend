@@ -7,23 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,9 +18,7 @@ import java.util.List;
 public class UniversityModel {
 
     @Id
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
 
     @NotBlank(message = "University name is required")
@@ -69,17 +53,18 @@ public class UniversityModel {
     @JsonIgnore
     private List<FacultyModel> faculties;
 
-
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ProgramModel> programs;
 
-    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
-    private List<UniversityContactModel> contacts;
+    private List<UniversityContactModel> contacts = new ArrayList<>();
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ScholarshipModel> scholarships;
 
 }
+
+
