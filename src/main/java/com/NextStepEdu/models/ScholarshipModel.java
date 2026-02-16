@@ -50,6 +50,8 @@ public class ScholarshipModel {
 
     private LocalDateTime deadline;
 
+    private Integer maxApplicant;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

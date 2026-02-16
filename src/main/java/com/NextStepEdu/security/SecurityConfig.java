@@ -16,10 +16,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
@@ -64,15 +66,10 @@ public class SecurityConfig {
 
 
 
-                .requestMatchers(HttpMethod.GET, "/api/v1/universities/**", "/api/v1/university-contacts").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/university-contacts/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/university-contacts/**").hasRole("ADMIN")
-
-                .requestMatchers(HttpMethod.GET, "/api/v1/university-contacts/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/university-contacts/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/university-contacts/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/university-contacts/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/universities/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/universities/**").hasAnyRole("ADMIN")
 
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/faculties/**", "/api/v1/faculties").permitAll()
@@ -108,9 +105,27 @@ public class SecurityConfig {
 
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.cors(cors -> cors.configure(http));
+        http.cors(Customizer.withDefaults());
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(java.util.List.of(
+                "https://next-step-edu.vercel.app",
+                "http://localhost:3000",
+                "http://localhost:5173"
+        ));
+        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type", "Accept", "Origin"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
@@ -123,5 +138,7 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
+
+
 
 }

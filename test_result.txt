@@ -1,0 +1,37 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com:NextStepEdu >---------------------------
+[INFO] Building NextStepEdu 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] The artifact org.hibernate:hibernate-jpamodelgen:jar:6.1.7.Final has been relocated to org.hibernate.orm:hibernate-jpamodelgen:jar:6.1.7.Final
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ NextStepEdu ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ NextStepEdu ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 94 source files with javac [debug parameters release 21] to target\classes
+[INFO] Hibernate compile-time tooling 7.2.1.Final
+[WARNING] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/mappers/ScholarshipMapper.java:[13,22] Unmapped target properties: "university, faculty, scholarships". Mapping from property "ScholarshipResponse.ProgramInfo program" to "ProgramModel program".
+[WARNING] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/mappers/ScholarshipMapper.java:[13,22] Unmapped target properties: "createdAt, updatedAt, faculties, programs, contacts, scholarships". Mapping from property "ScholarshipResponse.UniversityInfo university" to "UniversityModel university".
+[WARNING] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/mappers/ScholarshipMapper.java:[13,22] Unmapped target property: "scholarship". Mapping from Collection element "ScholarshipResponse.ContactInfo contacts" to "ScholarshipContactModel contacts".
+[WARNING] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/mappers/ScholarshipMapper.java:[13,22] Unmapped target property: "applicants".
+[WARNING] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/mappers/ScholarshipMapper.java:[14,24] Unmapped target properties: "programId, universityId, logo, coverImage".
+[INFO] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/controllers/ScholarshipController.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/CHORY Chanrady/Desktop/Midterm Project/mid-term-wing-nextstepedu-backend/src/main/java/com/NextStepEdu/controllers/ScholarshipController.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ NextStepEdu ---
+[INFO] skip non existing resourceDirectory C:\Users\CHORY Chanrady\Desktop\Midterm Project\mid-term-wing-nextstepedu-backend\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ NextStepEdu ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ NextStepEdu ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.980 s
+[INFO] Finished at: 2026-02-15T23:28:01+07:00
+[INFO] ------------------------------------------------------------------------

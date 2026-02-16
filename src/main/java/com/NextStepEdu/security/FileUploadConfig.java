@@ -13,3 +13,4 @@ public class FileUploadConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:uploads/");
     }
 }
+

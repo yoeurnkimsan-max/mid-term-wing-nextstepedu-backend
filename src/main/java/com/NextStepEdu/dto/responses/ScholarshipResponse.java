@@ -16,6 +16,7 @@ public record ScholarshipResponse(
         String coverImageUrl,
         String description,
         Integer level,
+        Integer maxApplicant,
         String benefits,
         String requirements,
         String howToApply,
@@ -112,6 +113,7 @@ public record ScholarshipResponse(
                 .coverImageUrl(scholarship.getCoverImageUrl())
                 .description(scholarship.getDescription())
                 .level(scholarship.getLevel())
+                .maxApplicant(scholarship.getMaxApplicant())
                 .benefits(scholarship.getBenefits())
                 .requirements(scholarship.getRequirements())
                 .howToApply(scholarship.getHowToApply())

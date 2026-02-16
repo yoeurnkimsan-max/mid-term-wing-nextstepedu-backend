@@ -59,6 +59,7 @@ public class ScholarshipServiceImpl implements ScholarshipService {
             String name,
             String description,
             Integer level,
+            Integer maxApplicant,
             String benefits,
             String requirements,
             String howToApply,
@@ -81,6 +82,7 @@ public class ScholarshipServiceImpl implements ScholarshipService {
         scholarship.setSlug(generateSlug(name));
         scholarship.setDescription(description);
         scholarship.setLevel(level);
+        scholarship.setMaxApplicant(maxApplicant);
         scholarship.setBenefits(benefits);
         scholarship.setRequirements(requirements);
         scholarship.setHowToApply(howToApply);
