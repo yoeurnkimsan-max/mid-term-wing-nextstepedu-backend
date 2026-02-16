@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/springboot_jpa_db
+    username: postgres
+    password: password
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,7 +19,7 @@ spring:
       max-request-size: 20MB
 
 cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME}
-  api-key: ${CLOUDINARY_API_KEY}
-  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: dic7vvuah
+  api-key: 851326586715864
+  api-secret: f_vB3O_nAMZKW9sYBAV-8IYga-A
 
