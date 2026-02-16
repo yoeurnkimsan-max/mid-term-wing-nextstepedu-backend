@@ -65,10 +65,9 @@ public class SecurityConfig {
 
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/universities/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").permitAll()
-//                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/universities/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/universities/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/universities/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/universities/**").hasAnyRole("ADMIN")
 
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/faculties/**", "/api/v1/faculties").permitAll()
