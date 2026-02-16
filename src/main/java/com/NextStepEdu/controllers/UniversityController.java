@@ -22,12 +22,25 @@ public class UniversityController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UniversityResponse> createUniversity(
-            @Valid @ModelAttribute UniversityRequest request,
-            @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
-            @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
-        UniversityResponse response = universityService.createUniversity(request, logoUrl, coverImageUrl);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            @RequestParam String name,
+            @RequestParam String slug,
+            @RequestParam String description,
+            @RequestParam String country,
+            @RequestParam String city,
+            @RequestParam String officialWebsite,
+            @RequestParam String status,
+            @RequestPart(value = "logo", required = false) MultipartFile logo,
+            @RequestPart(value = "coverImage", required = false) MultipartFile coverImage
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(universityService.createUniversity(
+                        name, slug, description, country, city, officialWebsite,
+                        status,  logo, coverImage
+                ));
     }
+
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UniversityResponse> getUniversityById(@PathVariable Integer id) {
@@ -57,11 +70,13 @@ public class UniversityController {
     public ResponseEntity<UniversityResponse> updateUniversity(
             @PathVariable Integer id,
             @Valid @ModelAttribute UniversityRequest request,
-            @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
-            @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
-        UniversityResponse response = universityService.updateUniversity(id, request, logoUrl, coverImageUrl);
+            @RequestParam(value = "logo", required = false) MultipartFile logo,
+            @RequestParam(value = "coverImage", required = false) MultipartFile coverImage
+    ) {
+        UniversityResponse response = universityService.updateUniversity(id, request, logo, coverImage);
         return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUniversity(@PathVariable Integer id) {

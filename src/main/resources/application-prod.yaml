@@ -11,8 +11,13 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  servlet:
+      multipart:
+        max-file-size: 50MB
+        max-request-size: 50MB
 
 cloudinary:
   cloud-name: dkloakzs6
   api-key: 162361396439147
   api-secret: DVu7SNnY50pVCr7xxY1mRmsO4Os
+

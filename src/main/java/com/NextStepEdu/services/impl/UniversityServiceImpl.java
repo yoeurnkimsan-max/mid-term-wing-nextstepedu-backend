@@ -3,6 +3,7 @@ package com.NextStepEdu.services.impl;
 import com.NextStepEdu.dto.requests.UniversityRequest;
 import com.NextStepEdu.dto.responses.UniversityResponse;
 import com.NextStepEdu.mappers.UniversityMapper;
+import com.NextStepEdu.models.UniversityContactModel;
 import com.NextStepEdu.models.UniversityModel;
 import com.NextStepEdu.repositories.UniversityRepository;
 import com.NextStepEdu.services.CloudinaryImageService;
@@ -29,27 +30,36 @@ public class UniversityServiceImpl implements UniversityService {
 
     @Override
     @Transactional
-    public UniversityResponse createUniversity(UniversityRequest request, MultipartFile logo,
-            MultipartFile coverImage) {
-        UniversityModel university = universityMapper.toModel(request);
+    public UniversityResponse createUniversity(
+            String name, String slug, String description, String country, String city,
+            String officialWebsite, String status,
+            MultipartFile logo, MultipartFile coverImage
+    ) {
+        UniversityModel university = new UniversityModel();
+        university.setName(name);
+        university.setSlug(slug);
+        university.setDescription(description);
+        university.setCountry(country);
+        university.setCity(city);
+        university.setOfficialWebsite(officialWebsite);
+        university.setStatus(status);
         university.setCreatedAt(LocalDateTime.now());
         university.setUpdatedAt(LocalDateTime.now());
 
-        // Upload logo image
         String logoUrl = uploadImage(logo);
-        if (logoUrl != null) {
-            university.setLogoUrl(logoUrl);
-        }
+        if (logoUrl != null) university.setLogoUrl(logoUrl);
 
-        // Upload cover image
-        String coverImageUrl = uploadImage(coverImage);
-        if (coverImageUrl != null) {
-            university.setCoverImageUrl(coverImageUrl);
-        }
+        String coverUrl = uploadImage(coverImage);
+        if (coverUrl != null) university.setCoverImageUrl(coverUrl);
 
-        UniversityModel savedUniversity = universityRepository.save(university);
-        return universityMapper.toResponse(savedUniversity);
+
+        UniversityModel saved = universityRepository.save(university);
+        return universityMapper.toResponse(saved);
     }
+    private boolean hasText(String s) {
+        return s != null && !s.trim().isEmpty();
+    }
+
 
     @Override
     public UniversityResponse getUniversityById(Integer id) {

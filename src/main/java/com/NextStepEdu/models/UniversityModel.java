@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -58,7 +59,6 @@ public class UniversityModel {
     private String officialWebsite;
 
     private String status;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -74,9 +74,9 @@ public class UniversityModel {
     @JsonIgnore
     private List<ProgramModel> programs;
 
-    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<UniversityContactModel> contacts;
+    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UniversityContactModel> contacts = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     @JsonIgnore

@@ -23,8 +23,9 @@ public class CloudinaryImageServiceImpl implements CloudinaryImageService {
         try {
           Map data =   this.cloudinary.uploader().upload(file.getBytes() , Map.of());
           return  data;
-        }catch (IOException e){
-            throw new RemoteException("Image upload failed");
+        }catch(IOException e){
+            throw new RuntimeException("Cloudinary error: " + e.getMessage());
         }
+
     }
 }

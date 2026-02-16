@@ -26,6 +26,6 @@ public class UniversityContactModel {
 
     @ManyToOne
     @JoinColumn(name = "university_id", nullable = false)
-    @JsonBackReference
     private UniversityModel university;
+
 }

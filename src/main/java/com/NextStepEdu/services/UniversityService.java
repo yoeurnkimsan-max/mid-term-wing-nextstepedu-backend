@@ -7,7 +7,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface UniversityService {
-    UniversityResponse createUniversity(UniversityRequest request, MultipartFile logo, MultipartFile coverImage);
+    UniversityResponse createUniversity(String name ,
+                                        String slug  ,
+                                        String description,
+                                        String country,
+                                        String city,
+                                        String officialWebsite,
+                                        String status,
+                                        MultipartFile logo,
+                                        MultipartFile coverImage);
 
     UniversityResponse getUniversityById(Integer id);
 

@@ -12,6 +12,5 @@ public class UniversityContactResponse {
     private String label;
     private String email;
     private String phone;
-    private String websiteUrl;
     private Integer universityId;
 }
