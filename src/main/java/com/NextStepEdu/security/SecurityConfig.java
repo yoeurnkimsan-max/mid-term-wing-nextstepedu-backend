@@ -66,13 +66,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/applicants/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/applicants/**").hasRole("ADMIN")
 
-
-
                 .requestMatchers(HttpMethod.GET, "/api/v1/universities/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/universities/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/universities/**").hasAnyRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/universities/**").hasAnyRole("ADMIN")
-
+                 .requestMatchers(HttpMethod.POST,"/api/v1/universities/**").hasAnyRole("ADMIN")
+                 .requestMatchers(HttpMethod.PUT,"/api/v1/universities/**").hasAnyRole("ADMIN")
+                 .requestMatchers(HttpMethod.DELETE,"/api/v1/universities/**").hasAnyRole("ADMIN")
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/faculties/**", "/api/v1/faculties").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/faculties/**").hasRole("ADMIN")
@@ -84,20 +81,19 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/v1/programs/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/programs/**").hasRole("ADMIN")
 
-                .requestMatchers(HttpMethod.GET, "/api/v1/scholarship-contact/**", "/api/v1/scholarship-contact").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/scholarship-contact/**", "/api/v1/scholarship-contact")
+                .permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/scholarship-contact/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/scholarship-contact/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/scholarship-contact/**").hasRole("ADMIN")
-
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/scholarship/**", "/api/v1/scholarship").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/scholarship/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/scholarship/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/scholarship/**").hasRole("ADMIN")
 
-
                 .requestMatchers("/api/v1/profile/**").permitAll()
-                        .anyRequest().authenticated());
+                .anyRequest().authenticated());
 
         http.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwtConfigurer -> jwtConfigurer
@@ -118,8 +114,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(java.util.List.of(
                 "https://next-step-edu.vercel.app",
                 "http://localhost:3000",
-                "http://localhost:5173"
-        ));
+                "http://localhost:5173"));
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type", "Accept", "Origin"));
         config.setAllowCredentials(true);
@@ -140,7 +135,5 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
-
-
 
 }

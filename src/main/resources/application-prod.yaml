@@ -26,9 +26,9 @@ server:
     max-connections: 200
     threads:
       max: 200
-    max-http-post-size: 20971520
     max-parameter-count: 10000
-  max-http-header-size: 20MB
+    max-part-count: 50
+  max-http-request-header-size: 20MB
 
 logging:
   level:
@@ -38,9 +38,7 @@ logging:
     org.apache.tomcat: DEBUG
     org.apache.coyote.http11: DEBUG
 
-
 cloudinary:
   cloud-name: dkloakzs6
   api-key: 162361396439147
   api-secret: DVu7SNnY50pVCr7xxY1mRmsO4Os
-

@@ -16,16 +16,16 @@ public class CloudinaryImageServiceImpl implements CloudinaryImageService {
     @Autowired
     private Cloudinary cloudinary;
 
-
     @Override
-    public Map upload(MultipartFile file) throws IOException {
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> upload(MultipartFile file) throws IOException {
 
         try {
-          Map data =   this.cloudinary.uploader().upload(file.getBytes() , Map.of());
-          return  data;
-        }catch(IOException e){
-            throw new RuntimeException("Cloudinary error: " + e.getMessage());
+            Map<String, Object> data = (Map<String, Object>) (Map<?, ?>) this.cloudinary.uploader()
+                    .upload(file.getBytes(), Map.of());
+            return data;
+        } catch (IOException e) {
+            throw new RemoteException("Image upload failed");
         }
-
     }
 }
