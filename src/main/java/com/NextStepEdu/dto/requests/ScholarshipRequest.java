@@ -17,7 +17,7 @@ public class ScholarshipRequest {
     private String description;
 
     @NotNull(message = "Level is required")
-    private Integer level;
+    private String level;
 
     @NotNull(message = "Max Applicant is required")
     private Integer maxApplicant;

@@ -3,7 +3,9 @@ package com.NextStepEdu.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
 public class ScholarshipModel {
 
     @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotBlank(message = "Scholarship name is required")
@@ -32,7 +34,7 @@ public class ScholarshipModel {
 
     private String description;
 
-    private Integer level;
+    private String level;
 
 
     private String benefits;
@@ -50,7 +52,12 @@ public class ScholarshipModel {
 
     private LocalDateTime deadline;
 
+
     private Integer maxApplicant;
+
+    @Column(name = "current_applicant")
+    private Integer currentApplicant = 0;
+
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

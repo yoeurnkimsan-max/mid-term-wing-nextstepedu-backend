@@ -21,7 +21,7 @@ public interface ScholarshipService {
     ScholarshipModel create(
             String name,
             String description,
-            Integer level,
+            String level,
             Integer maxApplicant,
             String benefits,
             String requirements,
@@ -39,7 +39,7 @@ public interface ScholarshipService {
             Integer id,
             String name,
             String description,
-            Integer level,
+            String level,
             String benefits,
             String requirements,
             String howToApply,
