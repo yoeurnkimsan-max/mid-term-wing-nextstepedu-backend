@@ -18,7 +18,7 @@ public interface UniversityService {
     List<UniversityResponse> searchUniversities(String keyword);
 
     UniversityResponse updateUniversity(Integer id, UniversityRequest request, MultipartFile logo,
-            MultipartFile coverImage);
+                                        MultipartFile coverImage);
 
     void deleteUniversity(Integer id);
 }

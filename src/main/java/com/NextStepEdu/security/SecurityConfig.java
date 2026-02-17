@@ -58,10 +58,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(endpoint -> endpoint
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**").hasRole("ADMIN")
+
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/applicants", "/api/v1/applicants/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/applicants/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/applicants/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/v1/applicants/**").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/applicants/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/applicants/**").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.GET, "/api/v1/universities/**").permitAll()

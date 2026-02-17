@@ -9,6 +9,13 @@ import java.util.List;
 
 public interface UserProfileRepository  extends JpaRepository<UserProfileModel , Integer> {
     boolean existsByUser(UserModel user);
-    @Query("SELECT p FROM UserProfileModel p JOIN FETCH p.user")
+
+
+    @Query("""
+   SELECT up FROM UserProfileModel up
+   JOIN FETCH up.user u
+   LEFT JOIN FETCH u.roles
+""")
     List<UserProfileModel> findAllWithUser();
+
 }

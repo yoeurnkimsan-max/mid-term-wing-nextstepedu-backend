@@ -73,19 +73,31 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public  List<UserProfileResponse> getAllProfiles() {
+    public List<UserProfileResponse> getAllProfiles() {
         return userProfileRepository.findAllWithUser()
                 .stream()
-                .map(p -> new UserProfileResponse(
-                        p.getId(),
-                        p.getUser().getId(),
-                        p.getUser().getEmail(),
-                        p.getFirstname(),
-                        p.getLastname(),
-                        p.getPhone(),
-                        p.getImage(),
-                        p.getUser().getCreatedAt()
-                ))
+                .map(p -> {
+                    String role = "USER";
+
+                    if (p.getUser().getRoles() != null && !p.getUser().getRoles().isEmpty()) {
+                        role = p.getUser().getRoles().get(0).getName();
+                    }
+
+                    return new UserProfileResponse(
+                            p.getId(),
+                            p.getUser().getId(),
+                            p.getUser().getEmail(),
+                            p.getFirstname(),
+                            p.getLastname(),
+                            p.getPhone(),
+                            p.getImage(),
+                            p.getUser().getCreatedAt(),
+                            role,
+                            p.getUser().getStatus()
+
+                    );
+                })
                 .toList();
     }
+
 }

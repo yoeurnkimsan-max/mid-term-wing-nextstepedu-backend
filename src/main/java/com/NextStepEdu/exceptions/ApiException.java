@@ -12,8 +12,10 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.ServletRequestBindingException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ApiException {
@@ -21,7 +23,7 @@ public class ApiException {
         @ExceptionHandler(MethodArgumentNotValidException.class)
         @ResponseStatus(HttpStatus.BAD_REQUEST)
         Map<?, ?> MethodArgumentNotValidException(MethodArgumentNotValidException e) {
-                List<FieldError> fieldErrors = new ArrayList<FieldError>();
+                List<FieldError> fieldErrors = new ArrayList<>();
                 e.getFieldErrors()
                                 .forEach(fieldError -> fieldErrors
                                                 .add(FieldError.builder()
@@ -91,4 +93,6 @@ public class ApiException {
                                                 "error", "Internal Server Error",
                                                 "message", "An unexpected error occurred"));
         }
+
 }
+

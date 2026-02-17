@@ -1,5 +1,7 @@
 package com.NextStepEdu.dto.responses;
 
+import com.NextStepEdu.models.AccountStatus;
+
 import java.time.LocalDateTime;
 
 public record UserProfileResponse(
@@ -10,6 +12,8 @@ public record UserProfileResponse(
         String lastname,
         String phone,
         String image,
-         LocalDateTime createdAt
-) {
-}
+        LocalDateTime createdAt,
+        String role,
+        AccountStatus status
+) {}
+
