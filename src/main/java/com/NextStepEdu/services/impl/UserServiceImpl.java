@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+
     @Override
     @Transactional
     public void updateUserStatus(Integer userId, AccountStatus status) {
