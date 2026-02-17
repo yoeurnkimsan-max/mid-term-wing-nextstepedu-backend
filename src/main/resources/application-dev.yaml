@@ -28,12 +28,11 @@ server:
     max-connections: 200
     threads:
       max: 200
-    max-http-post-size: 20971520
     max-parameter-count: 10000
-  max-http-header-size: 20MB
+    max-part-count: 50
+  max-http-request-header-size: 20MB
 
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
-

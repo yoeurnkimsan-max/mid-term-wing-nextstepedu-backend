@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = { UniversityContactMapper.class })
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UniversityMapper {
 
     UniversityResponse toResponse(UniversityModel model);
@@ -18,7 +18,6 @@ public interface UniversityMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "faculties", ignore = true)
     @Mapping(target = "programs", ignore = true)
-    @Mapping(target = "contacts", ignore = true)
     @Mapping(target = "scholarships", ignore = true)
     @Mapping(target = "logoUrl", ignore = true)
     @Mapping(target = "coverImageUrl", ignore = true)
@@ -29,7 +28,6 @@ public interface UniversityMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "faculties", ignore = true)
     @Mapping(target = "programs", ignore = true)
-    @Mapping(target = "contacts", ignore = true)
     @Mapping(target = "scholarships", ignore = true)
     @Mapping(target = "logoUrl", ignore = true)
     @Mapping(target = "coverImageUrl", ignore = true)

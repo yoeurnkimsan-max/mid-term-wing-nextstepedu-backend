@@ -1,13 +1,8 @@
 package com.NextStepEdu.controllers;
 
-import com.NextStepEdu.dto.requests.UniversityContactRequest;
 import com.NextStepEdu.dto.requests.UniversityRequest;
-import com.NextStepEdu.dto.requests.UniversityWithContactRequest;
-import com.NextStepEdu.dto.responses.UniversityContactResponse;
 import com.NextStepEdu.dto.responses.UniversityResponse;
-import com.NextStepEdu.services.UniversityContactService;
 import com.NextStepEdu.services.UniversityService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,10 +18,9 @@ import java.util.List;
 public class UniversityController {
 
     private final UniversityService universityService;
-    private final UniversityContactService contactService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UniversityResponse> createUniversityWithContact(
+    public ResponseEntity<UniversityResponse> createUniversity(
             @RequestParam(value = "name") String name,
             @RequestParam(value = "slug", required = false) String slug,
             @RequestParam(value = "description", required = false) String description,
@@ -34,20 +28,11 @@ public class UniversityController {
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "officialWebsite", required = false) String officialWebsite,
             @RequestParam(value = "status", required = false) String status,
-            @RequestParam(value = "label", required = false) String label,
             @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "label", required = false) String label,
             @RequestParam(value = "phone", required = false) String phone,
-            @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
-            @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
-
-//        if (logoUrl == null && coverImageUrl == null) {
-//            System.out.println("⚠️  WARNING: No files received!");
-//            System.out.println("   Check that in Postman:");
-//            System.out.println("   1. Body → form-data");
-//            System.out.println("   2. logoUrl field type = File (NOT Text!)");
-//            System.out.println("   3. coverImageUrl field type = File (NOT Text!)");
-//            System.out.println("   4. Select actual image files\n");
-//        }
+            @RequestParam(value = "logo", required = false) MultipartFile logo,
+            @RequestParam(value = "coverImage", required = false) MultipartFile coverImage) {
 
         UniversityRequest universityRequest = UniversityRequest.builder()
                 .name(name)
@@ -57,25 +42,13 @@ public class UniversityController {
                 .city(city)
                 .officialWebsite(officialWebsite)
                 .status(status)
+                .email(email)
+                .label(label)
+                .phone(phone)
                 .build();
 
-        UniversityResponse response = universityService.createUniversity(universityRequest, logoUrl, coverImageUrl);
-
-        if (label != null || email != null || phone != null) {
-            UniversityContactRequest contactRequest = UniversityContactRequest.builder()
-                    .label(label)
-                    .email(email)
-                    .phone(phone)
-                    .websiteUrl(null)
-                    .universityId(response.getId())
-                    .build();
-
-            contactService.createContact(contactRequest);
-        }
-
-        // Fetch and return the created university with contacts
-        UniversityResponse fullResponse = universityService.getUniversityById(response.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(fullResponse);
+        UniversityResponse response = universityService.createUniversity(universityRequest, logo, coverImage);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
@@ -113,11 +86,11 @@ public class UniversityController {
             @RequestParam(value = "city", required = false) String city,
             @RequestParam(value = "officialWebsite", required = false) String officialWebsite,
             @RequestParam(value = "status", required = false) String status,
-            @RequestParam(value = "label", required = false) String label,
             @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "label", required = false) String label,
             @RequestParam(value = "phone", required = false) String phone,
-            @RequestParam(value = "logoUrl", required = false) MultipartFile logoUrl,
-            @RequestParam(value = "coverImageUrl", required = false) MultipartFile coverImageUrl) {
+            @RequestParam(value = "logo", required = false) MultipartFile logo,
+            @RequestParam(value = "coverImage", required = false) MultipartFile coverImage) {
 
         UniversityRequest universityRequest = UniversityRequest.builder()
                 .name(name)
@@ -127,32 +100,12 @@ public class UniversityController {
                 .city(city)
                 .officialWebsite(officialWebsite)
                 .status(status)
+                .email(email)
+                .label(label)
+                .phone(phone)
                 .build();
 
-        universityService.updateUniversity(id, universityRequest, logoUrl, coverImageUrl);
-
-        // Update or create contact if contact fields are provided
-        if (label != null || email != null || phone != null) {
-            List<UniversityContactResponse> contacts = contactService.getContactsByUniversityId(id);
-
-            UniversityContactRequest contactRequest = UniversityContactRequest.builder()
-                    .label(label)
-                    .email(email)
-                    .phone(phone)
-                    .websiteUrl(null)
-                    .universityId(id)
-                    .build();
-
-            if (contacts.isEmpty()) {
-                // Create new contact if none exists
-                contactService.createContact(contactRequest);
-            } else {
-                // Update existing contact
-                contactService.updateContact(contacts.get(0).getId(), contactRequest);
-            }
-        }
-
-        // Fetch and return the updated university with contacts
+        universityService.updateUniversity(id, universityRequest, logo, coverImage);
         UniversityResponse response = universityService.getUniversityById(id);
         return ResponseEntity.ok(response);
     }

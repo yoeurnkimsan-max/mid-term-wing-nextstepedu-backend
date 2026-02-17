@@ -1,13 +1,11 @@
 package com.NextStepEdu.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -43,6 +41,12 @@ public class UniversityModel {
 
     private String status;
 
+    private String email;
+
+    private String label;
+
+    private String phone;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -57,14 +61,8 @@ public class UniversityModel {
     @JsonIgnore
     private List<ProgramModel> programs;
 
-    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
-    private List<UniversityContactModel> contacts = new ArrayList<>();
-
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ScholarshipModel> scholarships;
 
 }
-
-

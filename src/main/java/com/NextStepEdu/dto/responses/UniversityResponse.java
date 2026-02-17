@@ -3,7 +3,6 @@ package com.NextStepEdu.dto.responses;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -21,7 +20,9 @@ public class UniversityResponse {
     private String city;
     private String officialWebsite;
     private String status;
+    private String email;
+    private String label;
+    private String phone;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<UniversityContactResponse> contacts;
 }
