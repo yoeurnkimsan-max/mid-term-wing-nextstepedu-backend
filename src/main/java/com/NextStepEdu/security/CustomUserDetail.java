@@ -1,5 +1,6 @@
 package com.NextStepEdu.security;
 
+import com.NextStepEdu.models.AccountStatus;
 import com.NextStepEdu.models.UserModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,4 +32,6 @@ public class CustomUserDetail implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
+
 }

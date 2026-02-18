@@ -15,6 +15,7 @@ import com.NextStepEdu.services.CloudinaryImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -95,36 +96,49 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.email(),
-                        loginRequest.password()));
+        // ✅ 1) If email doesn't exist -> return 404
+        boolean emailExists = userRepository.existsAllByEmail(loginRequest.email());
+        if (!emailExists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Email not found");
+        }
 
+        // ✅ 2) If email exists but password wrong -> return 401
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.email(),
+                            loginRequest.password()
+                    )
+            );
+        } catch (BadCredentialsException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+
+        // ✅ 3) Build scope/role string
         String scope = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .filter(role -> role.startsWith("ROLE_"))
-                // Add this line to strip the prefix:
                 .map(role -> role.replace("ROLE_", ""))
                 .collect(Collectors.joining(" "));
 
-
         Instant now = Instant.now();
 
-        // Access Token
-        JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+        // ✅ 4) Access Token claims
+        JwtClaimsSet accessClaims = JwtClaimsSet.builder()
                 .id(authentication.getName())
                 .subject(authentication.getName())
                 .issuer("taskflow-api")
                 .issuedAt(now)
-                .expiresAt(now.plus(10, ChronoUnit.MINUTES)) // ✅ Adjust expiration
+                .expiresAt(now.plus(10, ChronoUnit.MINUTES))
                 .audience(List.of("NextJs", "Android", "IOS"))
                 .claim("role", scope)
                 .claim("scope", scope)
                 .build();
 
-        // Refresh Token
-        JwtClaimsSet jwtRefreshClaimsSet = JwtClaimsSet.builder()
+        // ✅ 5) Refresh Token claims
+        JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
                 .id(authentication.getName())
                 .subject(authentication.getName())
                 .issuer("taskflow-api")
@@ -135,11 +149,16 @@ public class AuthServiceImpl implements AuthService {
                 .claim("scope", scope)
                 .build();
 
-        String accessToken = accessTokenJwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet))
-                .getTokenValue();
-        String refreshToken = refreshTokenEncoder.encode(JwtEncoderParameters.from(jwtRefreshClaimsSet))
+        // ✅ 6) Encode tokens
+        String accessToken = accessTokenJwtEncoder
+                .encode(JwtEncoderParameters.from(accessClaims))
                 .getTokenValue();
 
+        String refreshToken = refreshTokenEncoder
+                .encode(JwtEncoderParameters.from(refreshClaims))
+                .getTokenValue();
+
+        // ✅ 7) Return response
         return AuthResponse.builder()
                 .tokenType("Bearer")
                 .accessToken(accessToken)
