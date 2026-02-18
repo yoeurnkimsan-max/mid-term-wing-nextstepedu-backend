@@ -56,6 +56,12 @@ public class SecurityConfig {
 
         // Endpoint Security config
         http.authorizeHttpRequests(endpoint -> endpoint
+            .requestMatchers(
+                "/v3/api-docs",
+                "/v3/api-docs/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**")
+            .permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/cloud/upload/**").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/users/**").hasRole("ADMIN")
